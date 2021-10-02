@@ -1,0 +1,5 @@
+.gradle/
+.idea/
+builtinftp/build/
+local.properties
+commons-io.inftp/build/
