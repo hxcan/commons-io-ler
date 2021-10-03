@@ -15,9 +15,9 @@
  * limitations under the License.
  */
 
-package org.apache.commons.io.file;
+package com.stupidbeauty.commons.io.file;
 
-import org.apache.commons.io.IOUtils;
+import com.stupidbeauty.commons.io.IOUtils;
 
 /**
  * Defines the standard delete options.

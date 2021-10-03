@@ -15,7 +15,7 @@
  * limitations under the License.
  */
 
-package org.apache.commons.io;
+package com.stupidbeauty.commons.io;
 
 import java.util.Arrays;
 import java.util.Locale;

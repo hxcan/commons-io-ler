@@ -15,7 +15,7 @@
  * limitations under the License.
  */
 
-package org.apache.commons.io.file;
+package com.stupidbeauty.commons.io.file;
 
 import java.math.BigInteger;
 import java.util.Objects;

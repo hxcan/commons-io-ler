@@ -15,7 +15,7 @@
  * limitations under the License.
  */
 
-package org.apache.commons.io.file;
+package com.stupidbeauty.commons.io.file;
 
 /**
  * An object that configures how to delete a file.

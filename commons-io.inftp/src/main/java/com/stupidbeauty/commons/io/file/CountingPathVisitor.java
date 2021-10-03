@@ -15,7 +15,7 @@
  * limitations under the License.
  */
 
-package org.apache.commons.io.file;
+package com.stupidbeauty.commons.io.file;
 
 import java.io.IOException;
 import java.nio.file.FileVisitResult;
@@ -24,8 +24,8 @@ import java.nio.file.Path;
 import java.nio.file.attribute.BasicFileAttributes;
 import java.util.Objects;
 
-import org.apache.commons.io.file.Counters.PathCounters;
-import org.apache.commons.io.filefilter.TrueFileFilter;
+import com.stupidbeauty.commons.io.file.Counters.PathCounters;
+import com.stupidbeauty.commons.io.filefilter.TrueFileFilter;
 
 /**
  * Counts files, directories, and sizes, as a visit proceeds.

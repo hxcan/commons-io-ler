@@ -1,6 +1,6 @@
 apply plugin: 'com.android.library'
 
-version="2021.10.3"
+version="2021.10.4"
 
 android {
 

@@ -16,7 +16,7 @@
  */
 package org.apache.commons.io.output;
 
-import org.apache.commons.io.IOUtils;
+import com.stupidbeauty.commons.io.IOUtils;
 import org.apache.commons.io.input.ClosedInputStream;
 
 import java.io.InputStream;
@@ -29,7 +29,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-import static org.apache.commons.io.IOUtils.EOF;
+import static com.stupidbeauty.commons.io.IOUtils.EOF;
 
 /**
  * This is the base class for implementing an output stream in which the data

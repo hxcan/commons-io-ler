@@ -14,7 +14,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.apache.commons.io;
+package com.stupidbeauty.commons.io;
 
 import java.io.BufferedOutputStream;
 import java.io.File;
@@ -62,16 +62,16 @@ import java.util.zip.CRC32;
 import java.util.zip.CheckedInputStream;
 import java.util.zip.Checksum;
 
-import org.apache.commons.io.file.AccumulatorPathVisitor;
-import org.apache.commons.io.file.Counters;
-import org.apache.commons.io.file.PathFilter;
-import org.apache.commons.io.file.PathUtils;
-import org.apache.commons.io.file.StandardDeleteOption;
-import org.apache.commons.io.filefilter.FileEqualsFileFilter;
-import org.apache.commons.io.filefilter.FileFileFilter;
-import org.apache.commons.io.filefilter.IOFileFilter;
-import org.apache.commons.io.filefilter.SuffixFileFilter;
-import org.apache.commons.io.filefilter.TrueFileFilter;
+import com.stupidbeauty.commons.io.file.AccumulatorPathVisitor;
+import com.stupidbeauty.commons.io.file.Counters;
+import com.stupidbeauty.commons.io.file.PathFilter;
+import com.stupidbeauty.commons.io.file.PathUtils;
+import com.stupidbeauty.commons.io.file.StandardDeleteOption;
+import com.stupidbeauty.commons.io.filefilter.FileEqualsFileFilter;
+import com.stupidbeauty.commons.io.filefilter.FileFileFilter;
+import com.stupidbeauty.commons.io.filefilter.IOFileFilter;
+import com.stupidbeauty.commons.io.filefilter.SuffixFileFilter;
+import com.stupidbeauty.commons.io.filefilter.TrueFileFilter;
 
 /**
  * General file manipulation utilities.

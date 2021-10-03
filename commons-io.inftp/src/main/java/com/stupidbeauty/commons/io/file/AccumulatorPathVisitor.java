@@ -15,7 +15,7 @@
  * limitations under the License.
  */
 
-package org.apache.commons.io.file;
+package com.stupidbeauty.commons.io.file;
 
 import java.io.IOException;
 import java.nio.file.Path;
@@ -25,7 +25,7 @@ import java.util.Comparator;
 import java.util.List;
 import java.util.Objects;
 
-import org.apache.commons.io.file.Counters.PathCounters;
+import com.stupidbeauty.commons.io.file.Counters.PathCounters;
 
 /**
  * Accumulates normalized paths during visitation.

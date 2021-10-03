@@ -15,7 +15,7 @@
  * limitations under the License.
  */
 
-package org.apache.commons.io.file;
+package com.stupidbeauty.commons.io.file;
 
 import java.io.File;
 import java.io.IOException;
@@ -56,10 +56,10 @@ import java.util.stream.Collector;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
-import org.apache.commons.io.IOExceptionList;
-import org.apache.commons.io.IOUtils;
-import org.apache.commons.io.file.Counters.PathCounters;
-import org.apache.commons.io.filefilter.IOFileFilter;
+import com.stupidbeauty.commons.io.IOExceptionList;
+import com.stupidbeauty.commons.io.IOUtils;
+import com.stupidbeauty.commons.io.file.Counters.PathCounters;
+import com.stupidbeauty.commons.io.filefilter.IOFileFilter;
 
 /**
  * NIO Path utilities.

@@ -16,7 +16,7 @@
  */
 package org.apache.commons.io.input;
 
-import static org.apache.commons.io.IOUtils.EOF;
+import static com.stupidbeauty.commons.io.IOUtils.EOF;
 
 import java.io.InputStream;
 

@@ -14,7 +14,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.apache.commons.io.filefilter;
+package com.stupidbeauty.commons.io.filefilter;
 
 import java.io.File;
 import java.io.FileFilter;
@@ -25,8 +25,8 @@ import java.nio.file.Path;
 import java.nio.file.attribute.BasicFileAttributes;
 import java.util.Objects;
 
-import org.apache.commons.io.file.PathFilter;
-import org.apache.commons.io.file.PathVisitor;
+import com.stupidbeauty.commons.io.file.PathFilter;
+import com.stupidbeauty.commons.io.file.PathVisitor;
 
 /**
  * Abstracts the implementation of the {@link FileFilter} (IO), {@link FilenameFilter} (IO), {@link PathFilter} (NIO)

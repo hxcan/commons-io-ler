@@ -15,7 +15,7 @@
  * limitations under the License.
  */
 
-package org.apache.commons.io.filefilter;
+package com.stupidbeauty.commons.io.filefilter;
 
 import java.io.File;
 import java.nio.file.FileVisitResult;
