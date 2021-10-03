@@ -331,6 +331,47 @@ public class FileUtils {
             throw new IOExceptionList(directory.toString(), causeList);
         }
     }
+    
+        /**
+     * Finds files within a given directory (and optionally its
+     * subdirectories). All files found are filtered by an IOFileFilter.
+     * <p>
+     * If your search should recurse into subdirectories you can pass in
+     * an IOFileFilter for directories. You don't need to bind a
+     * DirectoryFileFilter (via logical AND) to this filter. This method does
+     * that for you.
+     * </p>
+     * <p>
+     * An example: If you want to search through all directories called
+     * "temp" you pass in {@code FileFilterUtils.NameFileFilter("temp")}
+     * </p>
+     * <p>
+     * Another common usage of this method is find files in a directory
+     * tree but ignoring the directories generated CVS. You can simply pass
+     * in {@code FileFilterUtils.makeCVSAware(null)}.
+     * </p>
+     *
+     * @param directory  the directory to search in
+     * @param fileFilter filter to apply when finding files. Must not be {@code null},
+     *                   use {@link TrueFileFilter#INSTANCE} to match all files in selected directories.
+     * @param dirFilter  optional filter to apply when finding subdirectories.
+     *                   If this parameter is {@code null}, subdirectories will not be included in the
+     *                   search. Use {@link TrueFileFilter#INSTANCE} to match all directories.
+     * @return a collection of java.io.File with the matching files
+     * @see org.apache.commons.io.filefilter.FileFilterUtils
+     * @see org.apache.commons.io.filefilter.NameFileFilter
+     */
+    public static Collection<File> listFiles(
+        final File directory, final IOFileFilter fileFilter, final IOFileFilter dirFilter) {
+        try {
+            final AccumulatorPathVisitor visitor = listAccumulate(directory, fileFilter, dirFilter);
+            return visitor.getFileList().stream().map(Path::toFile).collect(Collectors.toList());
+        } catch (final IOException e) {
+            throw new UncheckedIOException(directory.toString(), e);
+        }
+    }
+
+
 
     /**
      * Cleans a directory without deleting it.
