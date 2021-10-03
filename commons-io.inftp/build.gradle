@@ -1,8 +1,14 @@
 apply plugin: 'com.android.library'
 
-version="2021.10.2"
+version="2021.10.3"
 
 android {
+
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_1_8
+        targetCompatibility JavaVersion.VERSION_1_8
+    }
+
     compileSdkVersion 28
 
     resourcePrefix "stupidbeauty__"

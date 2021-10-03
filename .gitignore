@@ -3,3 +3,6 @@
 builtinftp/build/
 local.properties
 commons-io.inftp/build/
+commons-io.inftp/src/main/java/com/stupidbeauty/commons/io/.hg/
+commons-io.inftp/src/main/java/com/stupidbeauty/commons/io/StockDataTools.exz
+commons-io.inftp/src/main/java/com/stupidbeauty/commons/io/taskCleaner.output.txt
