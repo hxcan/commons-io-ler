@@ -265,48 +265,6 @@ public class FileUtils {
     }
 
     /**
-     * Computes the checksum of a file using the specified checksum object. Multiple files may be checked using one
-     * {@code Checksum} instance if desired simply by reusing the same checksum object. For example:
-     *
-     * <pre>
-     * long checksum = FileUtils.checksum(file, new CRC32()).getValue();
-     * </pre>
-     *
-     * @param file the file to checksum, must not be {@code null}
-     * @param checksum the checksum object to be used, must not be {@code null}
-     * @return the checksum specified, updated with the content of the file
-     * @throws NullPointerException if the given {@code File} is {@code null}.
-     * @throws NullPointerException if the given {@code Checksum} is {@code null}.
-     * @throws IllegalArgumentException if the given {@code File} does not exist or is not a file.
-     * @throws IOException if an IO error occurs reading the file.
-     * @since 1.3
-     */
-    public static Checksum checksum(final File file, final Checksum checksum) throws IOException {
-        requireExistsChecked(file, "file");
-        requireFile(file, "file");
-        Objects.requireNonNull(checksum, "checksum");
-        try (InputStream inputStream = new CheckedInputStream(Files.newInputStream(file.toPath()), checksum)) {
-            IOUtils.consume(inputStream);
-        }
-        return checksum;
-    }
-
-    /**
-     * Computes the checksum of a file using the CRC32 checksum routine.
-     * The value of the checksum is returned.
-     *
-     * @param file the file to checksum, must not be {@code null}
-     * @return the checksum value
-     * @throws NullPointerException if the given {@code File} is {@code null}.
-     * @throws IllegalArgumentException if the given {@code File} does not exist or is not a file.
-     * @throws IOException              if an IO error occurs reading the file.
-     * @since 1.3
-     */
-    public static long checksumCRC32(final File file) throws IOException {
-        return checksum(file, new CRC32()).getValue();
-    }
-
-    /**
      * Cleans a directory without deleting it.
      *
      * @param directory directory to clean
@@ -396,58 +354,6 @@ public class FileUtils {
 
         if (!causeList.isEmpty()) {
             throw new IOExceptionList(causeList);
-        }
-    }
-
-    /**
-     * Tests whether the contents of two files are equal.
-     * <p>
-     * This method checks to see if the two files are different lengths or if they point to the same file, before
-     * resorting to byte-by-byte comparison of the contents.
-     * </p>
-     * <p>
-     * Code origin: Avalon
-     * </p>
-     *
-     * @param file1 the first file
-     * @param file2 the second file
-     * @return true if the content of the files are equal or they both don't exist, false otherwise
-     * @throws IllegalArgumentException when an input is not a file.
-     * @throws IOException If an I/O error occurs.
-     * @see org.apache.commons.io.file.PathUtils#fileContentEquals(Path,Path,java.nio.file.LinkOption[],java.nio.file.OpenOption...)
-     */
-    public static boolean contentEquals(final File file1, final File file2) throws IOException {
-        if (file1 == null && file2 == null) {
-            return true;
-        }
-        if (file1 == null || file2 == null) {
-            return false;
-        }
-        final boolean file1Exists = file1.exists();
-        if (file1Exists != file2.exists()) {
-            return false;
-        }
-
-        if (!file1Exists) {
-            // two not existing files are equal
-            return true;
-        }
-
-        requireFile(file1, "file1");
-        requireFile(file2, "file2");
-
-        if (file1.length() != file2.length()) {
-            // lengths differ, cannot be equal
-            return false;
-        }
-
-        if (file1.getCanonicalFile().equals(file2.getCanonicalFile())) {
-            // same file
-            return true;
-        }
-
-        try (InputStream input1 = Files.newInputStream(file1.toPath()); InputStream input2 = Files.newInputStream(file2.toPath())) {
-            return IOUtils.contentEquals(input1, input2);
         }
     }
 

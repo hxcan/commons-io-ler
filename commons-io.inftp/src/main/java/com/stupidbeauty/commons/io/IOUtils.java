@@ -166,11 +166,6 @@ public class IOUtils {
     /**
      * Internal byte array buffer.
      */
-    private static final ThreadLocal<byte[]> SKIP_BYTE_BUFFER = ThreadLocal.withInitial(IOUtils::byteArray);
-
-    /**
-     * Internal byte array buffer.
-     */
     private static final ThreadLocal<char[]> SKIP_CHAR_BUFFER = ThreadLocal.withInitial(IOUtils::charArray);
 
     /**
@@ -744,86 +739,6 @@ public class IOUtils {
     }
 
     /**
-     * Consumes bytes from a {@code InputStream} and ignores them.
-     * <p>
-     * The buffer size is given by {@link #DEFAULT_BUFFER_SIZE}.
-     * </p>
-     *
-     * @param input the {@code InputStream} to read.
-     * @return the number of bytes copied. or {@code 0} if {@code input is null}.
-     * @throws NullPointerException if the InputStream is {@code null}.
-     * @throws NullPointerException if the OutputStream is {@code null}.
-     * @throws IOException if an I/O error occurs.
-     * @since 2.8.0
-     */
-    public static long consume(final InputStream input)
-            throws IOException {
-        return copyLarge(input, NullOutputStream.NULL_OUTPUT_STREAM, getByteArray());
-    }
-
-    /**
-     * Compares the contents of two Streams to determine if they are equal or
-     * not.
-     * <p>
-     * This method buffers the input internally using
-     * {@code BufferedInputStream} if they are not already buffered.
-     * </p>
-     *
-     * @param input1 the first stream
-     * @param input2 the second stream
-     * @return true if the content of the streams are equal or they both don't
-     * exist, false otherwise
-     * @throws NullPointerException if either input is null
-     * @throws IOException          if an I/O error occurs
-     */
-    public static boolean contentEquals(final InputStream input1, final InputStream input2) throws IOException {
-        // Before making any changes, please test with
-        // org.apache.commons.io.jmh.IOUtilsContentEqualsInputStreamsBenchmark
-        if (input1 == input2) {
-            return true;
-        }
-        if (input1 == null || input2 == null) {
-            return false;
-        }
-
-        // reuse one
-        final byte[] array1 = getByteArray();
-        // allocate another
-        final byte[] array2 = byteArray();
-        int pos1;
-        int pos2;
-        int count1;
-        int count2;
-        while (true) {
-            pos1 = 0;
-            pos2 = 0;
-            for (int index = 0; index < DEFAULT_BUFFER_SIZE; index++) {
-                if (pos1 == index) {
-                    do {
-                        count1 = input1.read(array1, pos1, DEFAULT_BUFFER_SIZE - pos1);
-                    } while (count1 == 0);
-                    if (count1 == EOF) {
-                        return pos2 == index && input2.read() == EOF;
-                    }
-                    pos1 += count1;
-                }
-                if (pos2 == index) {
-                    do {
-                        count2 = input2.read(array2, pos2, DEFAULT_BUFFER_SIZE - pos2);
-                    } while (count2 == 0);
-                    if (count2 == EOF) {
-                        return pos1 == index && input1.read() == EOF;
-                    }
-                    pos2 += count2;
-                }
-                if (array1[index] != array2[index]) {
-                    return false;
-                }
-            }
-        }
-    }
-
-    /**
      * Compares the contents of two Readers to determine if they are equal or not.
      * <p>
      * This method buffers the input internally using {@code BufferedReader} if they are not already buffered.
@@ -1140,85 +1055,6 @@ public class IOUtils {
     }
 
     /**
-     * Copies some or all bytes from a large (over 2GB) {@code InputStream} to an
-     * {@code OutputStream}, optionally skipping input bytes.
-     * <p>
-     * This method buffers the input internally, so there is no need to use a
-     * {@code BufferedInputStream}.
-     * </p>
-     * <p>
-     * Note that the implementation uses {@link #skip(InputStream, long)}.
-     * This means that the method may be considerably less efficient than using the actual skip implementation,
-     * this is done to guarantee that the correct number of characters are skipped.
-     * </p>
-     * The buffer size is given by {@link #DEFAULT_BUFFER_SIZE}.
-     *
-     * @param input the {@code InputStream} to read from
-     * @param output the {@code OutputStream} to write to
-     * @param inputOffset : number of bytes to skip from input before copying
-     * -ve values are ignored
-     * @param length : number of bytes to copy. -ve means all
-     * @return the number of bytes copied
-     * @throws NullPointerException if the input or output is null
-     * @throws IOException          if an I/O error occurs
-     * @since 2.2
-     */
-    public static long copyLarge(final InputStream input, final OutputStream output, final long inputOffset,
-                                 final long length) throws IOException {
-        return copyLarge(input, output, inputOffset, length, getByteArray());
-    }
-
-    /**
-     * Copies some or all bytes from a large (over 2GB) {@code InputStream} to an
-     * {@code OutputStream}, optionally skipping input bytes.
-     * <p>
-     * This method uses the provided buffer, so there is no need to use a
-     * {@code BufferedInputStream}.
-     * </p>
-     * <p>
-     * Note that the implementation uses {@link #skip(InputStream, long)}.
-     * This means that the method may be considerably less efficient than using the actual skip implementation,
-     * this is done to guarantee that the correct number of characters are skipped.
-     * </p>
-     *
-     * @param input the {@code InputStream} to read from
-     * @param output the {@code OutputStream} to write to
-     * @param inputOffset : number of bytes to skip from input before copying
-     * -ve values are ignored
-     * @param length : number of bytes to copy. -ve means all
-     * @param buffer the buffer to use for the copy
-     * @return the number of bytes copied
-     * @throws NullPointerException if the input or output is null
-     * @throws IOException          if an I/O error occurs
-     * @since 2.2
-     */
-    public static long copyLarge(final InputStream input, final OutputStream output,
-                                 final long inputOffset, final long length, final byte[] buffer) throws IOException {
-        if (inputOffset > 0) {
-            skipFully(input, inputOffset);
-        }
-        if (length == 0) {
-            return 0;
-        }
-        final int bufferLength = buffer.length;
-        int bytesToRead = bufferLength;
-        if (length > 0 && length < bufferLength) {
-            bytesToRead = (int) length;
-        }
-        int read;
-        long totalRead = 0;
-        while (bytesToRead > 0 && EOF != (read = input.read(buffer, 0, bytesToRead))) {
-            output.write(buffer, 0, read);
-            totalRead += read;
-            if (length > 0) { // only adjust length if not reading to the end
-                // Note the cast must work because buffer.length is an integer
-                bytesToRead = (int) Math.min(length - totalRead, bufferLength);
-            }
-        }
-        return totalRead;
-    }
-
-    /**
      * Copies chars from a large (over 2GB) {@code Reader} to a {@code Writer}.
      * <p>
      * This method buffers the input internally, so there is no need to use a
@@ -1329,15 +1165,6 @@ public class IOUtils {
             }
         }
         return totalRead;
-    }
-
-    /**
-     * Gets the thread local byte array.
-     *
-     * @return the thread local byte array.
-     */
-    static byte[] getByteArray() {
-        return SKIP_BYTE_BUFFER.get();
     }
 
     /**
@@ -1740,50 +1567,6 @@ public class IOUtils {
     }
 
     /**
-     * Skips bytes from an input byte stream.
-     * This implementation guarantees that it will read as many bytes
-     * as possible before giving up; this may not always be the case for
-     * skip() implementations in subclasses of {@link InputStream}.
-     * <p>
-     * Note that the implementation uses {@link InputStream#read(byte[], int, int)} rather
-     * than delegating to {@link InputStream#skip(long)}.
-     * This means that the method may be considerably less efficient than using the actual skip implementation,
-     * this is done to guarantee that the correct number of bytes are skipped.
-     * </p>
-     *
-     * @param input byte stream to skip
-     * @param toSkip number of bytes to skip.
-     * @return number of bytes actually skipped.
-     * @throws IOException              if there is a problem reading the file
-     * @throws IllegalArgumentException if toSkip is negative
-     * @see InputStream#skip(long)
-     * @see <a href="https://issues.apache.org/jira/browse/IO-203">IO-203 - Add skipFully() method for InputStreams</a>
-     * @since 2.0
-     */
-    public static long skip(final InputStream input, final long toSkip) throws IOException {
-        if (toSkip < 0) {
-            throw new IllegalArgumentException("Skip count must be non-negative, actual: " + toSkip);
-        }
-        /*
-         * N.B. no need to synchronize access to SKIP_BYTE_BUFFER: - we don't care if the buffer is created multiple
-         * times (the data is ignored) - we always use the same size buffer, so if it it is recreated it will still be
-         * OK (if the buffer size were variable, we would need to synch. to ensure some other thread did not create a
-         * smaller one)
-         */
-        long remain = toSkip;
-        while (remain > 0) {
-            // See https://issues.apache.org/jira/browse/IO-203 for why we use read() rather than delegating to skip()
-            final byte[] byteArray = getByteArray();
-            final long n = input.read(byteArray, 0, (int) Math.min(remain, byteArray.length));
-            if (n < 0) { // EOF
-                break;
-            }
-            remain -= n;
-        }
-        return toSkip - remain;
-    }
-
-    /**
      * Skips bytes from a ReadableByteChannel.
      * This implementation guarantees that it will read as many bytes
      * as possible before giving up.
@@ -1849,35 +1632,6 @@ public class IOUtils {
             remain -= n;
         }
         return toSkip - remain;
-    }
-
-    /**
-     * Skips the requested number of bytes or fail if there are not enough left.
-     * <p>
-     * This allows for the possibility that {@link InputStream#skip(long)} may
-     * not skip as many bytes as requested (most likely because of reaching EOF).
-     * <p>
-     * Note that the implementation uses {@link #skip(InputStream, long)}.
-     * This means that the method may be considerably less efficient than using the actual skip implementation,
-     * this is done to guarantee that the correct number of characters are skipped.
-     * </p>
-     *
-     * @param input stream to skip
-     * @param toSkip the number of bytes to skip
-     * @throws IOException              if there is a problem reading the file
-     * @throws IllegalArgumentException if toSkip is negative
-     * @throws EOFException             if the number of bytes skipped was incorrect
-     * @see InputStream#skip(long)
-     * @since 2.0
-     */
-    public static void skipFully(final InputStream input, final long toSkip) throws IOException {
-        if (toSkip < 0) {
-            throw new IllegalArgumentException("Bytes to skip must not be negative: " + toSkip);
-        }
-        final long skipped = skip(input, toSkip);
-        if (skipped != toSkip) {
-            throw new EOFException("Bytes to skip: " + toSkip + " actual: " + skipped);
-        }
     }
 
     /**
